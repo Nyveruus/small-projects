@@ -1,3 +1,7 @@
+/* The purpose of this program is to apply a greyscale filter onto a 24-bit .bmp image
+   Usage: ./main FILENAME
+*/
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -15,7 +19,7 @@ typedef struct tagBITMAPFILEHEADER {
     DWORD bfOffBits;
 } __attribute__((__packed__)) BMP_HEADER;
 
-// structure adapted from https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader
+// struct adapted from https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader
 
 typedef struct
 {
@@ -32,7 +36,7 @@ typedef struct
     DWORD  biClrImportant;
 } __attribute__((__packed__)) BMP_INFO_HEADER;
 
-// structure adapted from https://learn.microsoft.com/en-us/previous-versions//dd183376(v=vs.85)
+// struct adapted from https://learn.microsoft.com/en-us/previous-versions//dd183376(v=vs.85)
 
 typedef struct tagRGBTRIPLE {
     BYTE rgbtBlue;
@@ -40,7 +44,7 @@ typedef struct tagRGBTRIPLE {
     BYTE rgbtRed;
 } __attribute__((__packed__)) RGBTRIPLE;
 
-// structure adapted from https://learn.microsoft.com/en-us/previous-versions/aa922590(v=msdn.10)
+// struct adapted from https://learn.microsoft.com/en-us/previous-versions/aa922590(v=msdn.10)
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
@@ -89,7 +93,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    FILE *out = fopen("grayscale.bmp", "wb");
+    FILE *out = fopen("greyscale.bmp", "wb");
     if (out == NULL) {
         fprintf(stderr, "Could not create output file\n");
         fclose(in);
@@ -108,11 +112,11 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    printf("Saved as greyscale.bmp\n");
+
     fclose(in);
     fclose(out);
     free(pixels);
-
-    printf("Saved as grayscale.bmp\n");
 
     return 0;
 }
