@@ -1,5 +1,3 @@
-// coleman-liau formula
-
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
@@ -75,7 +73,7 @@ int parser(char *buffer, size_t strlength, int *letters, int *words, int *senten
 }
 
 void print(int index) {
-    printf("Based off of average number of words in a sentence and average number of letters in words\n\n");
+    printf("Coleman-Liau formula: Based on average number of words in a sentence and average number of letters in words\n\n");
 
     if (index < 1) {
         printf("Kindergarten\n");
