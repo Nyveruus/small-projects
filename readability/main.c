@@ -4,7 +4,10 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-int parser(char *buffer, size_t strlength, int *letters, int *words, int *sentences);
+#define IN_WORD 1
+#define OUT_WORD 0
+
+int parser(char *buffer, size_t strlength, float *letters, float *words, float *sentences);
 void print(int index);
 
 int main(int argc, char *argv[]) {
@@ -39,13 +42,13 @@ int main(int argc, char *argv[]) {
 
     fclose(in);
 
-    int nletters = 0;
-    int nwords = 1;
-    int nsentences = 0;
+    float nletters = 0;
+    float nwords = 1;
+    float nsentences = 0;
 
     parser(buffer, strlength, &nletters, &nwords, &nsentences);
 
-    int index = round(0.0588 * nletters * 100 / nwords - 0.296 * nsentences * 100 / nwords - 15.8);
+    int index = (int)round(0.0588 * nletters * 100 / nwords - 0.296 * nsentences * 100 / nwords - 15.8);
     free(buffer);
 
     print(index);
@@ -53,18 +56,22 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-int parser(char *buffer, size_t strlength, int *letters, int *words, int *sentences) {
+int parser(char *buffer, size_t strlength, float *letters, float *words, float *sentences) {
+    int state;
     for (size_t i = 0; i < strlength; i++) {
         if (isalpha(buffer[i])) {
             (*letters)++;
         }
-        if (isblank(buffer[i])) {
+        if (isblank(buffer[i]) || buffer[i] == '\n') {
+            state = OUT_WORD;
+        } else if (state == OUT_WORD) {
             (*words)++;
+            state = IN_WORD;
         }
         if (i != 0) {
-            if (buffer[i - 1] != '!' && buffer[i] == '!'
-            || buffer[i - 1] != '?' && buffer[i] == '?'
-            || buffer[i - 1] != '.' && buffer[i] == '.') {
+            if ((buffer[i - 1] != '!' && buffer[i] == '!')
+            || (buffer[i - 1] != '?' && buffer[i] == '?')
+            || (buffer[i - 1] != '.' && buffer[i] == '.')) {
                 (*sentences)++;
             }
         }
